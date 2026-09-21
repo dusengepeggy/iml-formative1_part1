@@ -29,7 +29,8 @@ class Linear(Module):
                 (out_features,). Initialized to zero.
         """
         super().__init__()
-        self.W = np.random.randn(in_features, out_features) * 0.01
+        bound = np.sqrt(6.0 / (in_features + out_features))
+        self.W = np.random.uniform(-bound, bound, size=(in_features, out_features))
         self.b = np.zeros(out_features)
         self.dW = np.zeros_like(self.W)
         self.db = np.zeros_like(self.b)
@@ -59,8 +60,8 @@ class Linear(Module):
                 input, shape
                 (batch_size, in_features).
         """
-        self.dW = self.x.T @ grad_output
-        self.db = np.sum(grad_output, axis=0)
+        self.dW[...] = self.x.T @ grad_output
+        self.db[...] = np.sum(grad_output, axis=0)
         return grad_output @ self.W.T
 
     def parameters(self) -> list[tuple[np.ndarray, np.ndarray]]:

@@ -74,7 +74,27 @@ sufficient — grading runs a larger private suite plus a short technical
 defense. The guide and the rubric list every property that is checked; read
 both. Do not try to special-case the tests.
 
-## 5. Submitting
+## 5. Notes on this submission
+
+- `nn/module.py` — base `Module` contract (forward/backward/parameters/zero_grad).
+- `nn/layers/linear.py` — `Linear`: `z = xW + b`, Xavier-initialized `W`,
+  zero `b`, gradients written in place into pre-allocated `dW`/`db` so the
+  optimizer's captured references stay valid across training steps.
+- `nn/activations/relu.py`, `sigmoid.py`, `softmax.py` — elementwise ReLU and
+  Sigmoid; Softmax with the max-subtraction stability trick and the
+  per-example Jacobian in `backward`.
+- `nn/losses/cross_entropy_loss.py`, `categorical_cross_entropy_loss.py` —
+  binary and multi-class cross-entropy, predictions clipped away from 0/1 in
+  both `forward` and `backward`.
+- `nn/optim/sgd.py` — vanilla `SGD`: `param -= lr * grad` in place, plus
+  `zero_grad()`.
+- `main.py` — wires `Linear -> Sigmoid -> CrossEntropyLoss` with `SGD` on the
+  4-point AND-gate toy dataset (not XOR — a single linear layer cannot learn
+  XOR). Exposes `toy_data()`, `train(epochs, lr, seed)`, and `accuracy()` per
+  the Stage 10 interface; the `__main__` block prints loss at a few epochs
+  and the final accuracy.
+
+## 6. Submitting
 
 Zip the submission root — `nn/`, `main.py`, your `README.md`, and the provided
 files — exactly as laid out above. Do not rename files or move `tests/`.
