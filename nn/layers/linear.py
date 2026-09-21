@@ -60,4 +60,12 @@ class Linear(Module):
         self.db[...] = np.sum(grad_output, axis=0)
         return grad_output @ self.W.T
 
-    def
+    def parameters(self) -> list[tuple[np.ndarray, np.ndarray]]:
+        """Return this layer's learnable parameters.
+
+        Returns:
+            list[tuple[np.ndarray, np.ndarray]]: pairs of 
+                (parameter, gradient) --
+                [(self.W, self.dW), (self.b, self.db)]. 
+        """
+        return [(self.W, self.dW), (self.b, self.db)]   
