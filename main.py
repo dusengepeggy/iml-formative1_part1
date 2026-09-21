@@ -77,6 +77,8 @@ def accuracy(loss_history: list[float] = None) -> float:
         float: fraction of toy-data examples classified correctly.
     """
     del loss_history
+    if _model is None:
+        train()
     linear, sigmoid = _model
     x, y = _data
     predictions = sigmoid.forward(linear.forward(x))
