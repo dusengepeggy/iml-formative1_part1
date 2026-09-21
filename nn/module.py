@@ -1,6 +1,4 @@
-"""Base class defining the shared interface for every layer, activation, and
-loss."""
-
+"""Base class defining the shared interface for every layer, activation, and loss."""
 
 class Module:
     """Base class every layer and activation subclasses.
