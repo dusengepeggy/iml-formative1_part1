@@ -8,7 +8,7 @@ from nn.module import Module
 class Softmax(Module):
     """Softmax activation, applied row-wise to a batch of logits.
 
-    Unlike ReLU or Sigmoid, each output dependes on every logit in its own row,
+    Unlike ReLU or Sigmoid, each output depends on every logit in its own row,
     not just the matching input -- see "A shape subtlety" above.
     """
 
@@ -23,7 +23,8 @@ class Softmax(Module):
                 Each row sums to 1.
         """
         exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
-        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+        self._output = exp_x / np.sum(exp_x, axis=1, keepdims=True)
+        return self._output
 
     def backward(self, grad_output: np.ndarray) -> np.ndarray:
         """Compute gradients given the upstream gradient.
@@ -38,4 +39,8 @@ class Softmax(Module):
                 input, shape
                 (batch_size, C).
         """
-        pass
+        probabilities = self._output
+        return probabilities * (
+            grad_output
+            - np.sum(grad_output * probabilities, axis=1, keepdims=True)
+        )
